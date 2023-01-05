@@ -282,6 +282,6 @@ Route::get('/sales', function() {
         'datasets' => $datasets
     ];
 
-    Cache::put($cacheName, $response, now()->addMinutes(5));
+    Cache::put($cacheName, $response, now()->addMonth());
     return response()->json($response);
 });
