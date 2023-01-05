@@ -111,8 +111,8 @@ Route::get('/sales', function() {
                 DB::raw('SUM(fact_sales.qty) as qty'),
                 DB::raw('SUM(fact_sales.total) as total')
             ])
-            ->join('dim_item', 'dim_item.id', 'fact_sales.item_id')
-            ->join('dim_customer', 'dim_customer.id', 'fact_sales.customer_id')
+            ->leftJoin('dim_item', 'dim_item.id', 'fact_sales.item_id')
+            ->leftJoin('dim_customer', 'dim_customer.id', 'fact_sales.customer_id')
             ->when(request()->item_ids, function($q) {
                 if(request()->item_ids == 'all') return $q;
 
@@ -149,8 +149,8 @@ Route::get('/sales', function() {
                 DB::raw('SUM(fact_sales.qty) as qty'),
                 DB::raw('SUM(fact_sales.total) as total')
             ])
-            ->join('dim_item', 'dim_item.id', 'fact_sales.item_id')
-            ->join('dim_customer', 'dim_customer.id', 'fact_sales.customer_id')
+            ->leftJoin('dim_item', 'dim_item.id', 'fact_sales.item_id')
+            ->leftJoin('dim_customer', 'dim_customer.id', 'fact_sales.customer_id')
             ->when(request()->item_ids, function($q) {
                 if(request()->item_ids == 'all') return $q;
 
