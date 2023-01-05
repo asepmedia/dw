@@ -98,7 +98,9 @@ Route::get('/sales', function() {
     $firstDate = $dimFirstDate->id;
     $lastDate = $dimLastDate->id;
 
-    if(request()->periode && request()->periode != 'all') {
+    $year = request()->year;
+    $to = request()->to;
+    if($year == $to) {
         $data = DB::table('fact_sales')
             ->select([
                 'dim_item.name as item',
@@ -195,6 +197,7 @@ Route::get('/sales', function() {
                     return [
                         'label' => $key,
                         'backgroundColor' => $row[0] ? $row[0]->background_color : null,
+                        'borderColor' => $row[0] ? $row[0]->background_color : null,
                         'data' => collect($row)->pluck('total')
                     ];
                 })
@@ -215,6 +218,7 @@ Route::get('/sales', function() {
                     return [
                         'label' => $key,
                         'backgroundColor' => $row[0] ? $row[0]->background_color : null,
+                        'borderColor' => $row[0] ? $row[0]->background_color : null,
                         'data' => collect($row)->pluck('qty')
                     ];
                 })
@@ -242,6 +246,7 @@ Route::get('/sales', function() {
                     return [
                         'label' => $key,
                         'backgroundColor' => $row[0] ? $row[0]->background_color_customer : null,
+                        'borderColor' => $row[0] ? $row[0]->background_color_customer : null,
                         'data' => $data
                     ];
                 })
@@ -268,8 +273,8 @@ Route::get('/sales', function() {
 
     $response = [
         'labels' => collect($labels)
-            ->transform(function($row) use ($month) {
-                if(request()->periode && request()->periode != 'all') {
+            ->transform(function($row) use ($month, $year, $to) {
+                if(request()->periode && $year == $to) {
                     return $month[((int) $row) - 1]." ".request()->year;
                 }
                 return $row;

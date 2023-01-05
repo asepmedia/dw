@@ -29,8 +29,9 @@
     "dependencies": {
         "@babel/preset-env": "^7.20.2",
         "@babel/preset-react": "^7.18.6",
-        "vue-advanced-search": "^0.1.43",
         "chart.js": "^3.8.0",
+        "debounce": "^1.2.1",
+        "vue-advanced-search": "^0.1.43",
         "vue-chartjs": "^4.0.0",
         "vue-multiselect": "^2.1.6",
         "vuejs-auto-complete": "^0.9.0"

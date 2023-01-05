@@ -1,6 +1,8 @@
 <template>
-    <div>
-        <Chart v-if="isLogin"/>
+    <div v-bind:class="{
+        'dark': isDarkMode
+    }">
+        <Chart v-if="isLogin" :isDarkMode="isDarkMode" @change-mode="onChangeMode"/>
         <div v-else class="flex bg-slate-50 min-h-screen w-screen justify-center items-center">
             <div class="bg-white rounded-xl border w-[350px] px-6 py-4 text-center">
                 <h3 class="text-3xl text-center font-bold text-slate-900">
@@ -12,7 +14,7 @@
                 <div>
                     <input
                         type="text"
-                        class="bg-slate-200 rounded-xl px-6 w-full h-[40px]"
+                        class="bg-slate-200/60 border rounded-xl px-6 w-full h-[40px]"
                         placeholder="Masukkan Username"
                         autocomplete="off"
                         value="asep@gmail.com"
@@ -22,7 +24,7 @@
                 <div>
                     <input
                         type="password"
-                        class="bg-slate-200 rounded-xl px-6 w-full h-[40px]"
+                        class="bg-slate-200/60 border rounded-xl px-6 w-full h-[40px]"
                         placeholder="Masukkan Kata Sandi"
                         autocomplete="off"
                         value="xxxx"
@@ -31,7 +33,7 @@
                 <div class="my-4"></div>
                 <button
                     v-on:click="login"
-                    class="bg-orange-500 rounded-xl px-6 w-full h-[40px]"
+                    class="bg-slate-900 rounded-xl px-6 w-full h-[40px]"
                 >
                     <span class="text-xl font-bold text-slate-50">Masuk</span>
                 </button>
@@ -55,18 +57,25 @@ export default {
     data() {
         return {
             loginDashboard: false,
+            darkMode: false
         }
     },
     computed: {
         isLogin() {
-            const isLogin = window.localStorage.getItem('loginss')
+            const isLogin = window.localStorage.getItem('loginsss')
             return isLogin || this.loginDashboard
+        },
+        isDarkMode() {
+            return this.darkMode
         }
     },
     methods: {
         login() {
-            window.localStorage.setItem('loginss', '232')
+            window.localStorage.setItem('loginsss', '232')
             this.loginDashboard = true
+        },
+        onChangeMode() {
+            this.darkMode = !this.darkMode
         }
     }
 }
