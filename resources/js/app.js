@@ -19,8 +19,7 @@ window.Vue = require('vue');
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
-const dashboardComponent = () => import(/* webpackChunkName: "dashboard" */ './components/DashboardComponent.vue')
-Vue.component('dashboard-component', dashboardComponent);
+Vue.component('dashboard-component', require('./components/DashboardComponent.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
