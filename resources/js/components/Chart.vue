@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-white dark:bg-slate-900 min-h-screen w-screen">
+    <div class="bg-sky-50 dark:bg-slate-900 min-h-screen w-screen">
         <div class="container px-5 py-5 md:px-10 md:py-10 mx-auto">
             <div class="flex flex-col gap-y-5">
                 <div class="flex justify-between items-center">
