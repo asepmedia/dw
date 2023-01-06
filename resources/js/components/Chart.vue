@@ -83,7 +83,7 @@
                                     :options="source.items"
                                     label="name"
                                     track-by="id"
-                                    placeholder="Pilih Barang"
+                                    placeholder="Barang"
                                     multiple
                                 >
                                 </multiselect>
@@ -108,7 +108,7 @@
                 <div class="flex flex-wrap justify-between">
                     <div class="border bg-gradient-to-r from-cyan-500 to-teal-500 dark:bg-gradient-to-r dark:from-cyan-700 dark:to-teal-700 rounded-xl px-10 py-5 mb-4 w-[100%] md:w-[49.3%] text-centers min-h-[110px]">
                         <div>
-                            <h3 v-if="!loading.sales" class="font-black text-3xl text-slate-50">
+                            <h3 v-if="!loading.sales" class="font-black text-3xl xl:text-4xl text-slate-50">
                                 {{ totalSales | number }}
                             </h3>
                             <center v-if="loading.sales">
@@ -122,7 +122,7 @@
                     </div>
                     <div class="border bg-gradient-to-r from-slate-500 to-slate-600 dark:bg-gradient-to-r dark:from-slate-600 dark:to-slate-700 rounded-xl px-10 py-5 mb-4 w-[100%] md:w-[49.3%] text-centers min-h-[110px]">
                         <div>
-                            <h3 v-if="!loading.salesQty" class="font-black text-3xl text-slate-50">
+                            <h3 v-if="!loading.salesQty" class="font-black text-3xl xl:text-4xl text-slate-50">
                                 {{ totalSold | number }}
                             </h3>
                             <center v-if="loading.salesQty">
