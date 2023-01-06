@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="border-b-4 border-slate-500/75 flex flex-col md:flex-row justify-between">
-            <h3 class="md:w-3/4 text-2xl font-black text-slate-500/75 dark:text-slate-300/90">
+            <h3 class="md:w-3/4 text-2xl font-bold text-slate-500/80 dark:text-slate-300/90">
                 {{ title }}
             </h3>
             <div class="md:w-1/6 mb-5">
