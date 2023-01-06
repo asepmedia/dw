@@ -423,7 +423,9 @@ export default {
             let total = 0
 
             datasets.forEach((dataset) => {
-                total += dataset.data.reduce((acc, v) => parseInt(acc) + parseInt(v))
+                dataset.data.forEach((v) => {
+                    total += parseInt(v)
+                })
             })
 
             return total
