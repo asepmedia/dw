@@ -41,10 +41,10 @@ Route::get('/sales', function() {
 
     $cacheName = json_encode(request()->all());
 
-    if(Cache::has($cacheName)) {
-        $response = Cache::get($cacheName);
-        return response()->json($response);
-    }
+    // if(Cache::has($cacheName)) {
+    //     $response = Cache::get($cacheName);
+    //     return response()->json($response);
+    // }
 
     $dimFirstDate = DB::table('dim_date')
         ->when(request()->year, function($q) {
@@ -63,7 +63,7 @@ Route::get('/sales', function() {
             }
 
             if($periode == 'S2') {
-                return $q->where('quarter', 'Q2');
+                return $q->where('quarter', 'Q3');
             }
 
             return $q->where('quarter', '=', $periode);
