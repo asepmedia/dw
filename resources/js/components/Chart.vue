@@ -145,8 +145,8 @@
                 <div class="my-4"></div>
                 <h3 class="font-bold">Anggota Kelompok</h3>
                 <ul>
-                    <li>Asep Yayat (20200801305)</li>
                     <li>Adi Putra Sukma Pratama (20200801266)</li>
+                    <li>Asep Yayat (20200801305)</li>
                     <li>Dimas Dwi Yulianto (20200801315)</li>
                     <li>Syaiful Fajri (20200803108)</li>
                     <li>Yun Prasetyo (20200801267)</li>
