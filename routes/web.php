@@ -54,9 +54,14 @@ Route::get('/sales', function() {
             return $q->where('year', '=', 2017);
         })
         ->when(request()->periode, function($q) {
-            if(request()->periode == 'all') return $q;
-
             $periode = request()->periode;
+
+            if(str_starts_with($periode, 'M')) {
+                $month = (int) str_replace("M","", $periode);
+                return $q->where('month', $month);
+            }
+
+            if(request()->periode == 'all') return $q;
 
             if($periode == 'S1') {
                 return $q->where('quarter', 'Q1');
@@ -78,9 +83,14 @@ Route::get('/sales', function() {
             return $q->where('year', '=', 2022);
         })
         ->when(request()->periode, function($q) {
-            if(request()->periode == 'all') return $q;
-
             $periode = request()->periode;
+
+            if(str_starts_with($periode, 'M')) {
+                $month = (int) str_replace("M","", $periode);
+                return $q->where('month', $month);
+            }
+
+            if(request()->periode == 'all') return $q;
 
             if($periode == 'S1') {
                 return $q->where('quarter', 'Q2');

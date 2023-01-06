@@ -37,7 +37,7 @@
                                 <label for="" class="text-slate-50 font-bold">Tahun Awal</label>
                                 <multiselect
                                     v-model="model.year"
-                                    :options="source.year"
+                                    :options="getYear"
                                     label="name"
                                     track-by="id"
                                     placeholder="Pilih Tahun"
@@ -50,7 +50,7 @@
                                 <label for="" class="text-slate-50 font-bold">Tahun Akhir</label>
                                 <multiselect
                                     v-model="model.endYear"
-                                    :options="source.year"
+                                    :options="getEndYear"
                                     label="name"
                                     track-by="id"
                                     placeholder="Pilih Tahun"
@@ -203,10 +203,6 @@ export default {
                     {
                         id: '2021',
                         name: '2021'
-                    },
-                    {
-                        id: '2022',
-                        name: '2022'
                     }
                 ],
                 periode: [
@@ -244,7 +240,67 @@ export default {
                         id: 'S2',
                         name: 'Semester II',
                         all: false
-                    }
+                    },
+                    {
+                        id: 'M1',
+                        name: 'Januari',
+                        all: false
+                    },
+                    {
+                        id: 'M2',
+                        name: 'Februari',
+                        all: false
+                    },
+                    {
+                        id: 'M3',
+                        name: 'Maret',
+                        all: false
+                    },
+                    {
+                        id: 'M4',
+                        name: 'April',
+                        all: false
+                    },
+                    {
+                        id: 'M5',
+                        name: 'Mei',
+                        all: false
+                    },
+                    {
+                        id: 'M6',
+                        name: 'Juni',
+                        all: false
+                    },
+                    {
+                        id: 'M7',
+                        name: 'Juli',
+                        all: false
+                    },
+                    {
+                        id: 'M8',
+                        name: 'Agustus',
+                        all: false
+                    },
+                    {
+                        id: 'M9',
+                        name: 'September',
+                        all: false
+                    },
+                    {
+                        id: 'M10',
+                        name: 'Oktober',
+                        all: false
+                    },
+                    {
+                        id: 'M11',
+                        name: 'November',
+                        all: false
+                    },
+                    {
+                        id: 'M12',
+                        name: 'Desember',
+                        all: false
+                    },
                 ]
             },
             model: {
@@ -313,6 +369,12 @@ export default {
             }
 
             return this.source.periode
+        },
+        getYear() {
+            return this.source.year.filter(year => parseInt(year.id) <= parseInt(this.model.endYear.id))
+        },
+        getEndYear() {
+            return this.source.year
         }
     },
     mounted() {
@@ -382,17 +444,31 @@ export default {
         fetchMasterData() {
             this.fetchItems()
             this.fetchCustomers()
+        },
+        changePeriodeToDefault() {
+            if (this.model.year.id !== this.model.endYear.id) {
+                this.model.periode = {
+                    id: 'all',
+                    name: 'Semua'
+                }
+            }
         }
     },
     watch: {
         'model.year': debounce(function (val) {
+            this.changePeriodeToDefault()
             this.fetchChart()
         }, 500),
         'model.endYear': debounce(function (val) {
+            this.changePeriodeToDefault()
             this.fetchChart()
         }, 500),
         'model.periode': debounce(function (val) {
-            this.fetchChart()
+            if (this.model.year.id === this.model.endYear.id) {
+                this.fetchChart()
+            } else {
+                this.changePeriodeToDefault()
+            }
         }, 500),
         'model.item': debounce(function (val) {
             this.fetchChart()
