@@ -24,7 +24,7 @@
         }
     </style>
 </head>
-<body>
+<body class="overflow-x-hidden">
     <div id="app">
         <dashboard-component></dashboard-component>
     </div>
