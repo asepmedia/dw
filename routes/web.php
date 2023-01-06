@@ -118,7 +118,7 @@ Route::get('/sales', function() {
                 'dim_customer.name as customer',
                 'dim_customer.background_color as background_color_customer',
                 DB::raw('MONTH(fact_sales.invoice_date) as date'),
-                DB::raw('SUM(fact_sales.qty) as qty'),
+                DB::raw('CAST(SUM(fact_sales.qty) as UNSIGNED) as qty'),
                 DB::raw('SUM(fact_sales.total) as total')
             ])
             ->leftJoin('dim_item', 'dim_item.id', 'fact_sales.item_id')
@@ -156,7 +156,7 @@ Route::get('/sales', function() {
                 'dim_customer.name as customer',
                 'dim_customer.background_color as background_color_customer',
                 DB::raw('YEAR(fact_sales.invoice_date) as date'),
-                DB::raw('SUM(fact_sales.qty) as qty'),
+                DB::raw('CAST(SUM(fact_sales.qty) as UNSIGNED) as qty'),
                 DB::raw('SUM(fact_sales.total) as total')
             ])
             ->leftJoin('dim_item', 'dim_item.id', 'fact_sales.item_id')

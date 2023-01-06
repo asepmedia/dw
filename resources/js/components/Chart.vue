@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-sky-50 dark:bg-slate-900 min-h-screen w-screen">
+    <div class="bg-white dark:bg-slate-900 min-h-screen w-screen">
         <div class="container px-5 py-5 md:px-10 md:py-10 mx-auto">
             <div class="flex flex-col gap-y-5">
                 <div class="flex justify-between items-center">
@@ -30,7 +30,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="bg-sky-900 dark:bg-slate-900/90 border rounded-xl py-3 px-6 md:sticky top-0 backdrop-blur z-[9999]">
+                <div class="bg-gradient-to-r from-sky-800 to-sky-900 dark:bg-slate-900/90 border rounded-xl py-3 px-6 md:sticky top-0 backdrop-blur z-[9999]">
                     <div class="flex flex-wrap">
                         <div class="w-full md:w-1/5 mb-3 md:mb-2">
                             <div class="px-1">
@@ -99,6 +99,36 @@
                                 >
                                 </multiselect>
                             </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-wrap justify-between">
+                    <div class="border bg-gradient-to-r from-cyan-500 to-teal-500 dark:bg-gradient-to-r dark:from-cyan-700 dark:to-teal-700 rounded-xl px-10 py-5 mb-4 w-[100%] md:w-[49.3%] text-centers min-h-[110px]">
+                        <div>
+                            <h3 v-if="!loading.sales" class="font-black text-3xl text-slate-50">
+                                {{ totalSales | number }}
+                            </h3>
+                            <center v-if="loading.sales">
+                                <Loader/>
+                            </center>
+                        </div>
+                        <div class="my-3"></div>
+                        <div class="text-slate-100 font-semibold text-[18px] dark:text-slate-300">
+                            Total Penjualan
+                        </div>
+                    </div>
+                    <div class="border bg-gradient-to-r from-slate-500 to-slate-600 dark:bg-gradient-to-r dark:from-slate-600 dark:to-slate-700 rounded-xl px-10 py-5 mb-4 w-[100%] md:w-[49.3%] text-centers min-h-[110px]">
+                        <div>
+                            <h3 v-if="!loading.salesQty" class="font-black text-3xl text-slate-50">
+                                {{ totalSold | number }}
+                            </h3>
+                            <center v-if="loading.salesQty">
+                                <Loader/>
+                            </center>
+                        </div>
+                        <div class="my-3"></div>
+                        <div class="text-slate-100 font-semibold text-[18px] dark:text-slate-300">
+                            Barang Terjual
                         </div>
                     </div>
                 </div>
@@ -375,6 +405,36 @@ export default {
         },
         getEndYear() {
             return this.source.year
+        },
+        totalSales() {
+            const { datasets } = this.chartSales
+
+            let total = 0
+
+            datasets.forEach((dataset) => {
+                total += dataset.data.reduce((acc, v) => acc + v)
+            })
+
+            return total
+        },
+        totalSold() {
+            const { datasets } = this.chartSalesQty
+            console.log({datasets})
+            let total = 0
+
+            datasets.forEach((dataset) => {
+                total += dataset.data.reduce((acc, v) => acc + v)
+            })
+
+            return total
+        },
+    },
+    filters: {
+        number(value, separator = '.') {
+            if (!value) {
+                return 0
+            }
+            return value.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, `$1${separator}`);
         }
     },
     mounted() {

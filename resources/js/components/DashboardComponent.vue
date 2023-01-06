@@ -1,6 +1,7 @@
 <template>
     <div v-bind:class="{
         'dark': isDarkMode,
+        'light': !isDarkMode,
     }">
         <Chart v-if="isLogin" :isDarkMode="isDarkMode" @change-mode="onChangeMode"/>
         <div v-else class="flex bg-sky-100/75 min-h-screen w-screen justify-center items-center flex-col">
