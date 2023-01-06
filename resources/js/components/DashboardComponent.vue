@@ -3,7 +3,7 @@
         'dark': isDarkMode,
         'light': !isDarkMode,
     }">
-        <Chart v-if="isLogin" :isDarkMode="isDarkMode" @change-mode="onChangeMode"/>
+        <Chart v-if="isLogin" :isDarkMode="isDarkMode" @change-mode="onChangeMode" @logout="logout"/>
         <div v-else class="flex bg-sky-100/75 min-h-screen w-screen justify-center items-center flex-col">
             <div class="bg-white rounded-2xl w-[350px] md:w-[400px] px-8 py-8 text-centser shadow-sm">
                 <h3 class="text-2xl text-center font-bold text-sky-900">
@@ -93,12 +93,18 @@ export default {
     },
     computed: {
         isLogin() {
-            const isLogin = window.localStorage.getItem('logss')
-            return isLogin || this.loginDashboard
+            return this.loginDashboard
         },
         isDarkMode() {
             return this.darkMode
         }
+    },
+    created() {
+        const isDarkMode = window.localStorage.getItem('darkmode')
+        this.darkMode = !!isDarkMode
+
+        const isLogin = window.localStorage.getItem('logss')
+        this.loginDashboard = !!isLogin
     },
     methods: {
         login() {
@@ -106,10 +112,21 @@ export default {
             setTimeout(() => {
                 window.localStorage.setItem('logss', 'login')
                 this.loginDashboard = true
+                this.loading = false
             }, 1500)
         },
         onChangeMode() {
+            if (this.isDarkMode) {
+                window.localStorage.removeItem('darkmode')
+            } else {
+                window.localStorage.setItem('darkmode', 'darkmode')
+            }
+
             this.darkMode = !this.darkMode
+        },
+        logout() {
+            window.localStorage.removeItem('logss')
+            this.loginDashboard = false
         }
     }
 }
