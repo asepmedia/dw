@@ -4,9 +4,9 @@
         'light': !isDarkMode,
     }">
         <Chart v-if="isLogin" :isDarkMode="isDarkMode" @change-mode="onChangeMode" @logout="logout"/>
-        <div v-else class="flex bg-sky-100/75 min-h-screen w-screen justify-center items-center flex-col">
-            <div class="bg-white rounded-2xl w-[350px] md:w-[400px] px-8 py-8 text-centser shadow-sm">
-                <h3 class="text-2xl text-center font-bold text-sky-900">
+        <div v-else class="flex bg-sky-100/75 dark:bg-slate-900 min-h-screen w-screen justify-center items-center flex-col">
+            <div class="bg-white dark:bg-slate-800 rounded-2xl w-[350px] md:w-[400px] px-8 py-8 text-centser shadow-sm">
+                <h3 class="text-2xl text-center font-bold text-sky-900 dark:text-sky-500">
                     Login Dashboard
                 </h3>
                 <div class="my-2"></div>
@@ -15,7 +15,7 @@
                 </div>
                 <div class="my-7"></div>
                 <div>
-                    <label for="" class="text-left font-semibolds text-slate-600">Username</label>
+                    <label for="" class="text-left font-semibolds text-slate-600 dark:text-slate-500">Username</label>
                     <div class="my-1"></div>
                     <input
                         :disabled="loading"
@@ -24,7 +24,7 @@
                         v-bind:class="{
                             'bg-slate-300/30': loading,
                             'cursor-wait': loading,
-                            'bg-slate-100': !loading
+                            'bg-slate-100 dark:bg-slate-300': !loading
                         }"
                         placeholder="Masukkan Username"
                         autocomplete="off"
@@ -33,7 +33,7 @@
                 </div>
                 <div class="my-4"></div>
                 <div>
-                    <label for="" class="text-left font-semibolds text-slate-600">Kata Sandi</label>
+                    <label for="" class="text-left font-semibolds text-slate-600 dark:text-slate-500">Kata Sandi</label>
                     <div class="my-1"></div>
                     <input
                         :disabled="loading"
@@ -42,7 +42,7 @@
                         v-bind:class="{
                             'bg-slate-300/30': loading,
                             'cursor-wait': loading,
-                            'bg-slate-200/60': !loading
+                            'bg-slate-100 dark:bg-slate-300': !loading
                         }"
                         placeholder="Masukkan Kata Sandi"
                         autocomplete="off"
@@ -69,7 +69,7 @@
                 <div class="text-slate-400">
                     Dosen Mata Kuliah
                 </div>
-                <h3 class="font-bold text-slate-800">
+                <h3 class="font-bold text-slate-800 dark:text-slate-400">
                     SAWALI WAHYU, S.Kom, M.Kom., CEAA, CITAP, CGRCPA, CITGP
                 </h3>
             </div>
