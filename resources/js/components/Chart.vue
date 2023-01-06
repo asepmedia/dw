@@ -135,7 +135,7 @@
                 </div>
             </div>
         </div>
-        <div class="bg-slate-500 dark:bg-slate-900">
+        <div class="bg-slate-500 dark:bg-slate-900 overflow-x-hidden">
             <div class="border-b"></div>
             <div class="text-center pt-5 text-slate-300 pb-5">
                 <h3 class="font-bold">Dosen Mata Kuliah Data Warehouse</h3>
