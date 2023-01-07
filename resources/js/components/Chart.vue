@@ -168,7 +168,7 @@
                 </div>
             </div>
         </div>
-        <div class="bg-slate-500 dark:bg-slate-900 overflow-x-hidden">
+        <div class="bg-gradient-to-r from-sky-700 to-sky-800 dark:bg-gradient-to-r dark:from-slate-800 dark:to-slate-900 overflow-x-hidden">
             <div class="border-b"></div>
             <div class="text-center pt-5 text-slate-300 pb-5">
                 <h3 class="font-bold">Dosen Mata Kuliah Data Warehouse</h3>
@@ -550,3 +550,29 @@ export default {
 }
 </script>
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
+<style>
+.dark .multiselect__tags {
+    background-color: transparent !important;
+}
+
+.dark .multiselect__input, .dark .multiselect__single {
+    background-color: transparent !important;
+    color: #fff;
+}
+
+.dark .multiselect__tag {
+    background-color: #06b6d4 !important;
+}
+
+.dark .multiselect__tag-icon:after {
+    color: #fff !important;
+}
+
+.dark .multiselect__placeholder {
+    color: #ddd !important;
+}
+
+.multiselect__option--highlight, .multiselect__option--highlight:after {
+    background-color: #06b6d4 !important;
+}
+</style>

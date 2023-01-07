@@ -46,7 +46,7 @@
                         }"
                         placeholder="Masukkan Kata Sandi"
                         autocomplete="off"
-                        value="xxxx"
+                        value="password1234"
                     />
                 </div>
                 <div class="my-4"></div>
@@ -55,7 +55,7 @@
                     v-on:click="login"
                     class="rounded-2xl px-6 w-full h-[45px] items-center justify-center flex"
                     v-bind:class="{
-                        'bg-slate-100': loading,
+                        'bg-slate-100 dark:bg-slate-500': loading,
                         'cursor-wait': loading,
                         'bg-sky-900': !loading
                     }"
