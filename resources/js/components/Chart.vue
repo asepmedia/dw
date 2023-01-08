@@ -5,7 +5,7 @@
                 <div class="flex justify-between items-center">
                     <div>
                         <h3 class="text-3xl font-black text-sky-900 dark:text-white">Dashboard</h3>
-                        <span class="text-slate-700 dark:text-slate-400">Menampilkan grafik data penjualan, penjualan oleh barang, penjualan oleh pelanggan</span>
+                        <span class="text-slate-700 dark:text-slate-400">Menampilkan grafik data invoice, invoice detail, item, item category dan pelanggan</span>
                     </div>
                     <div class="cursor-pointer flex item gap-x-2">
                         <div v-if="!isDarkMode" v-on:click="toggleDarkMode">
@@ -35,7 +35,7 @@
                 </div>
                 <div class="bg-gradient-to-r from-sky-800 to-sky-900 dark:bg-slate-900/90 border rounded-xl py-3 px-6 md:sticky top-0 backdrop-blur z-[9999]">
                     <div class="flex flex-wrap">
-                        <div class="w-full md:w-1/5 mb-3 md:mb-2">
+                        <div class="w-full md:w-1/6 mb-3 md:mb-3">
                             <div class="px-1">
                                 <label for="" class="text-sky-50 dark:text-sky-50 font-bold">Tahun Awal</label>
                                 <multiselect
@@ -48,7 +48,7 @@
                                 />
                             </div>
                         </div>
-                        <div class="w-full md:w-1/5 mb-3 md:mb-2">
+                        <div class="w-full md:w-1/6 mb-3 md:mb-3">
                             <div class="px-1">
                                 <label for="" class="text-sky-50 dark:text-sky-50 font-bold">Tahun Akhir</label>
                                 <multiselect
@@ -61,7 +61,7 @@
                                 />
                             </div>
                         </div>
-                        <div class="w-full md:w-1/5 mb-3 md:mb-2 mx:px-2">
+                        <div class="w-full md:w-1/6 mb-3 md:mb-3 mx:px-2">
                             <div class="px-1">
                                 <label class="text-sky-50 dark:text-sky-50 font-bold">Periode</label>
                                 <multiselect
@@ -75,12 +75,28 @@
                                 </multiselect>
                             </div>
                         </div>
-                        <div class="w-full md:w-1/5 mb-3 md:mb-2 mx:px-2">
+                        <div class="w-full md:w-1/6 mb-3 md:mb-2 mx:px-2">
+                            <div class="px-1">
+                                <label class="text-sky-50 dark:text-sky-50 font-bold">Kategori</label>
+                                <multiselect
+                                    v-model="model.category"
+                                    :options="source.categories"
+                                    :loading="loading.category"
+                                    label="name"
+                                    track-by="id"
+                                    placeholder="Kategori"
+                                    multiple
+                                >
+                                </multiselect>
+                            </div>
+                        </div>
+                        <div class="w-full md:w-1/6 mb-3 md:mb-2 mx:px-2">
                             <div class="px-1">
                                 <label class="text-sky-50 dark:text-sky-50 font-bold">Barang</label>
                                 <multiselect
                                     v-model="model.item"
                                     :options="source.items"
+                                    :loading="loading.item"
                                     label="name"
                                     track-by="id"
                                     placeholder="Barang"
@@ -89,12 +105,13 @@
                                 </multiselect>
                             </div>
                         </div>
-                        <div class="w-full md:w-1/5 mb-3 md:mb-2 mx:px-2">
+                        <div class="w-full md:w-1/6 mb-3 md:mb-2 mx:px-2">
                             <div class="px-1">
                                 <label class="text-sky-50 dark:text-sky-50 font-bold">Pelanggan</label>
                                 <multiselect
                                     v-model="model.customer"
                                     :options="source.customers"
+                                    :loading="loading.customer"
                                     label="name"
                                     track-by="id"
                                     placeholder="Pilih Pelanggan"
@@ -131,14 +148,14 @@
                         </div>
                         <div class="my-3"></div>
                         <div class="text-slate-100 font-semibold text-[18px] dark:text-slate-300">
-                            Barang Terjual
+                            Total Barang Terjual
                         </div>
                     </div>
                 </div>
                 <div>
                     <ChartContainer
                         chartId="chart-penjualan"
-                        title="Total Pendapatan Penjualan"
+                        title="Grafik Invoice"
                         :loading="loading.sales"
                         :labels="chartSales.labels"
                         :datasets="chartSales.datasets"
@@ -148,7 +165,7 @@
                 <div>
                     <ChartContainer
                         ref="chart-penjualan-barang"
-                        title="Total Penjualan Barang"
+                        title="Grafik Item"
                         chartId="chart-penjualan-barang"
                         :loading="loading.salesQty"
                         :labels="chartSalesQty.labels"
@@ -158,8 +175,19 @@
                 <div class="my-1"></div>
                 <div>
                     <ChartContainer
+                        ref="chart-penjualan-barang-kategori"
+                        title="Grafik Item Category"
+                        chartId="chart-penjualan-barang-kategori"
+                        :loading="loading.salesCategory"
+                        :labels="chartSalesCategory.labels"
+                        :datasets="chartSalesCategory.datasets"
+                    />
+                </div>
+                <div class="my-1"></div>
+                <div>
+                    <ChartContainer
                         ref="chart-penjualan-barang-customer"
-                        title="Total Penjualan oleh Pelanggan"
+                        title="Grafik Customer"
                         chartId="chart-penjualan-barang-customer"
                         :loading="loading.salesCustomer"
                         :labels="chartSalesCustomer.labels"
@@ -216,6 +244,7 @@ export default {
             source: {
                 items: [],
                 customers: [],
+                categories: [],
                 year: [
                     {
                         id: '2017',
@@ -350,6 +379,7 @@ export default {
                     name: 'Semua'
                 },
                 item: [],
+                category: [],
                 customer: {
                     id: 'all',
                     name: 'Semua'
@@ -367,12 +397,20 @@ export default {
                 salesCustomer: {
                     labels: [],
                     datasets: []
+                },
+                salesCategory: {
+                    labels: [],
+                    datasets: []
                 }
             },
             loading: {
                 sales: true,
                 salesQty: true,
-                salesCustomer: true
+                salesCustomer: true,
+                salesCategory: true,
+                category: true,
+                item: true,
+                customer: true
             },
             controller: {
                 sales: null,
@@ -390,6 +428,9 @@ export default {
         },
         chartSalesCustomer() {
             return this.chart.salesCustomer
+        },
+        chartSalesCategory() {
+            return this.chart.salesCategory
         },
         showAllPeriode() {
             const startYear = this.model.year.id
@@ -443,8 +484,8 @@ export default {
         }
     },
     mounted() {
-        this.fetchChart()
         this.fetchMasterData()
+        this.fetchChart()
         // this.controller.sales = new AbortController();
         this.controller.salesQty = new AbortController();
         this.controller.salesCustomer = new AbortController();
@@ -460,9 +501,10 @@ export default {
             const startYear = this.model.year.id
             const endYear = this.model.endYear.id
             const periode = this.model.periode.id
+            const category = this.model.category.map(category => category.id).join(',')
             const item = this.model.item.map(item => item.id).join(',')
             const customer = this.model.customer.id || ''
-            return `year=${startYear}&to=${endYear}&item_ids=${item}&customer_ids=${customer}&periode=${periode}`
+            return `year=${startYear}&to=${endYear}&category_ids=${category}&item_ids=${item}&customer_ids=${customer}&periode=${periode}`
         },
         async fetchSalesChart() {
             this.loading.sales = true
@@ -494,22 +536,53 @@ export default {
             this.chart.salesCustomer.datasets = datasets
             this.loading.salesCustomer = false
         },
+        async fetchSalesCategoryChart() {
+            this.loading.salesCategory = true
+            const response = await axios.get(`/sales?type=category&${this.getParams()}`)
+            const { data } = response
+            const { labels, datasets } = data
+
+            this.chart.salesCategory.labels = labels
+            this.chart.salesCategory.datasets = datasets
+            this.loading.salesCategory = false
+        },
         fetchChart() {
             this.fetchSalesChart()
             this.fetchSalesQtyChart()
             this.fetchSalesCustomerChart()
+            this.fetchSalesCategoryChart()
+        },
+        async fetchCategories() {
+            this.loading.category = true
+
+            const response = await axios.get(`/categories`)
+            const { data } = response.data
+            this.source.categories = [...data]
+
+            this.loading.category = false
         },
         async fetchItems() {
-            const response = await axios.get(`/items`)
+            this.loading.item = true
+
+            const category = this.model.category.map(category => category.id).join(',')
+
+            const response = await axios.get(`/items?category_ids=${category}`)
             const { data } = response.data
             this.source.items = [...data]
+
+            this.loading.item = false
         },
         async fetchCustomers() {
+            this.loading.customer = true
+
             const response = await axios.get(`/customers`)
             const { data } = response.data
-            this.source.customers = [{id:'all', name: 'Semua'},...data]
+            this.source.customers = [{ id: 'all', name: 'Semua' }, ...data]
+
+            this.loading.customer = false
         },
         fetchMasterData() {
+            this.fetchCategories()
             this.fetchItems()
             this.fetchCustomers()
         },
@@ -540,18 +613,23 @@ export default {
         }, 500),
         'model.item': debounce(function (val) {
             this.fetchChart()
-            this.fetchMasterData()
+            // this.fetchMasterData()
+        }, 500),
+        'model.category': debounce(function (val) {
+            this.fetchChart()
+            this.fetchItems()
+            // this.fetchMasterData()
         }, 500),
         'model.customer': debounce(function (val) {
             this.fetchChart()
-            this.fetchMasterData()
+            // this.fetchMasterData()
         }, 500)
     }
 }
 </script>
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 <style>
-.dark .multiselect__tags {
+/* .dark .multiselect__tags {
     background-color: transparent !important;
 }
 
@@ -574,5 +652,5 @@ export default {
 
 .multiselect__option--highlight, .multiselect__option--highlight:after {
     background-color: #06b6d4 !important;
-}
+} */
 </style>

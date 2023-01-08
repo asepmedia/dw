@@ -22,7 +22,24 @@ Route::get('/', function () {
 
 
 Route::get('/items', function() {
-    $items = DB::table('dim_item')->get();
+    $cacheName = 'item_'.json_encode(request()->all());
+
+    if(Cache::has($cacheName)) {
+        $response = Cache::get($cacheName);
+        return response()->json(['data' => $response]);
+    }
+
+    $items = DB::table('dim_item')
+        ->when(request()->category_ids, function($q) {
+            if(request()->category_ids == 'all') return $q;
+
+            $categoryIds = explode(",", request()->category_ids);
+            return $q->whereIn('category_id', $categoryIds);
+        })
+        ->select(['id', 'name'])
+        ->get();
+
+    Cache::put($cacheName, $items->toArray(), now()->addMonth());
 
     return response()->json([
         'data' => $items
@@ -30,10 +47,27 @@ Route::get('/items', function() {
 });
 
 Route::get('/customers', function() {
-    $customers = DB::table('dim_customer')->get();
+    $cacheName = 'customer_'.json_encode(request()->all());
+
+    if(Cache::has($cacheName)) {
+        $response = Cache::get($cacheName);
+        return response()->json(['data' => $response]);
+    }
+
+    $customers = DB::table('dim_customer')->select(['id', 'name'])->get();
+
+    Cache::put($cacheName, $customers->toArray(), now()->addMonth());
 
     return response()->json([
         'data' => $customers
+    ]);
+});
+
+Route::get('/categories', function() {
+    $categories = DB::table('dim_item_category')->select(['id', 'name'])->get();
+
+    return response()->json([
+        'data' => $categories
     ]);
 });
 
@@ -114,6 +148,7 @@ Route::get('/sales', function() {
         $data = DB::table('fact_sales')
             ->select([
                 'dim_item.name as item',
+                'dim_item_category.name as category',
                 'dim_item.color as background_color',
                 'dim_customer.name as customer',
                 'dim_customer.background_color as background_color_customer',
@@ -122,7 +157,14 @@ Route::get('/sales', function() {
                 DB::raw('SUM(fact_sales.total) as total')
             ])
             ->leftJoin('dim_item', 'dim_item.id', 'fact_sales.item_id')
+            ->leftJoin('dim_item_category', 'dim_item_category.id', 'dim_item.category_id')
             ->leftJoin('dim_customer', 'dim_customer.id', 'fact_sales.customer_id')
+            ->when(request()->category_ids, function($q) {
+                if(request()->category_ids == 'all') return $q;
+
+                $categoryIds = explode(",", request()->category_ids);
+                return $q->whereIn('dim_item.category_id', $categoryIds);
+            })
             ->when(request()->item_ids, function($q) {
                 if(request()->item_ids == 'all') return $q;
 
@@ -147,11 +189,13 @@ Route::get('/sales', function() {
                 return $q->groupByRaw('fact_sales.customer_id, MONTH(fact_sales.invoice_date)');
             })
             ->orderByRaw('MONTH(fact_sales.invoice_date) ASC')
-            ->get();
+            ->get()
+            ->toArray();
     } else {
         $data = DB::table('fact_sales')
             ->select([
                 'dim_item.name as item',
+                'dim_item_category.name as category',
                 'dim_item.color as background_color',
                 'dim_customer.name as customer',
                 'dim_customer.background_color as background_color_customer',
@@ -160,7 +204,14 @@ Route::get('/sales', function() {
                 DB::raw('SUM(fact_sales.total) as total')
             ])
             ->leftJoin('dim_item', 'dim_item.id', 'fact_sales.item_id')
+            ->leftJoin('dim_item_category', 'dim_item_category.id', 'dim_item.category_id')
             ->leftJoin('dim_customer', 'dim_customer.id', 'fact_sales.customer_id')
+            ->when(request()->category_ids, function($q) {
+                if(request()->category_ids == 'all') return $q;
+
+                $categoryIds = explode(",", request()->category_ids);
+                return $q->whereIn('dim_item.category_id', $categoryIds);
+            })
             ->when(request()->item_ids, function($q) {
                 if(request()->item_ids == 'all') return $q;
 
@@ -185,7 +236,8 @@ Route::get('/sales', function() {
                 return $q->groupByRaw('fact_sales.customer_id, YEAR(fact_sales.invoice_date)');
             })
             ->orderByRaw('YEAR(fact_sales.invoice_date) ASC')
-            ->get();
+            ->get()
+            ->toArray();
     }
 
 
@@ -245,6 +297,34 @@ Route::get('/sales', function() {
 
             $datasets = collect($data)
                 ->groupBy('customer')
+                ->transform(function($row, $key) use ($labels) {
+                    $data = [];
+
+                    foreach($labels as $label) {
+                        $data[] = collect($row)
+                            ->where('date', $label)
+                            ->sum('total');
+                    }
+                    return [
+                        'label' => $key,
+                        'backgroundColor' => $row[0] ? $row[0]->background_color_customer : null,
+                        'borderColor' => $row[0] ? $row[0]->background_color_customer : null,
+                        'data' => $data
+                    ];
+                })
+                ->values()
+                ->toArray();
+            break;
+        case 'category':
+            $labels = collect($data)
+                ->groupBy('date')
+                ->transform(function($row, $key) {
+                    return $key;
+                })
+                ->values();
+
+            $datasets = collect($data)
+                ->groupBy('category')
                 ->transform(function($row, $key) use ($labels) {
                     $data = [];
 
