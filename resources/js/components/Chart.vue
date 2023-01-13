@@ -159,6 +159,7 @@
                         :loading="loading.sales"
                         :labels="chartSales.labels"
                         :datasets="chartSales.datasets"
+                        defaultType="bar"
                     />
                 </div>
                 <div class="my-1"></div>
@@ -170,6 +171,7 @@
                         :loading="loading.salesItem"
                         :labels="chartSalesItem.labels"
                         :datasets="chartSalesItem.datasets"
+                        defaultType="piebar"
                     />
                 </div>
                 <div class="my-1"></div>
@@ -181,6 +183,7 @@
                         :loading="loading.salesCategory"
                         :labels="chartSalesCategory.labels"
                         :datasets="chartSalesCategory.datasets"
+                        defaultType="barpie"
                     />
                 </div>
                 <div class="my-1"></div>

@@ -4,7 +4,7 @@
             <h3 class="md:w-3/4 text-2xl font-bold text-slate-500/80 dark:text-slate-300/90">
                 {{ title }}
             </h3>
-            <div class="md:w-1/6 mb-5">
+            <div class="md:w-1/5 mb-5">
                 <Multiselect
                     v-model="type"
                     :options="lists"
@@ -17,27 +17,113 @@
         <div v-if="loading" class="flex min-h-[20px] justify-center items-center">
             <Loader/>
         </div>
-        <BarChart
-            v-if="type.id === 'bar'"
-            :chartId="chartId"
-            :labels="labels"
-            :datasets="datasets"
-        />
-        <LineChart
-            v-if="type.id === 'line'"
-            :chartId="chartId"
-            :labels="labels"
-            :datasets="datasets"
-        />
-        <PieChart
-            v-if="type.id === 'pie'"
-            :chartId="chartId"
-            :labels="datasets.map(dataset => {
-                return dataset.label
-            })"
-            :datasets="pieDatasets"
-            :plugins="[piePlugins]"
-        />
+        <div v-if="type.id === 'piebar'">
+            <div class="flex">
+                <div class="w-1/4">
+                    <PieChart
+                        :chartId="chartId"
+                        :labels="datasets.map(dataset => {
+                            return dataset.label
+                        })"
+                        :datasets="pieDatasets"
+                        :plugins="[piePlugins]"
+                    />
+                </div>
+                <div class="w-3/4">
+                    <BarChart
+                        :chartId="chartId"
+                        :labels="labels"
+                        :datasets="datasets"
+                    />
+                </div>
+            </div>
+        </div>
+        <div v-else-if="type.id === 'pieline'">
+            <div class="flex">
+                <div class="w-1/4">
+                    <PieChart
+                        :chartId="chartId"
+                        :labels="datasets.map(dataset => {
+                            return dataset.label
+                        })"
+                        :datasets="pieDatasets"
+                        :plugins="[piePlugins]"
+                    />
+                </div>
+                <div class="w-3/4">
+                    <LineChart
+                        :chartId="chartId"
+                        :labels="labels"
+                        :datasets="datasets"
+                    />
+                </div>
+            </div>
+        </div>
+        <div v-else-if="type.id === 'barpie'">
+            <div class="flex">
+                <div class="w-3/4">
+                    <BarChart
+                        :chartId="chartId"
+                        :labels="labels"
+                        :datasets="datasets"
+                    />
+                </div>
+                <div class="w-1/4">
+                    <PieChart
+                        :chartId="chartId"
+                        :labels="datasets.map(dataset => {
+                            return dataset.label
+                        })"
+                        :datasets="pieDatasets"
+                        :plugins="[piePlugins]"
+                    />
+                </div>
+            </div>
+        </div>
+        <div v-else-if="type.id === 'linepie'">
+            <div class="flex">
+                <div class="w-3/4">
+                    <LineChart
+                        :chartId="chartId"
+                        :labels="labels"
+                        :datasets="datasets"
+                    />
+                </div>
+                <div class="w-1/4">
+                    <PieChart
+                        :chartId="chartId"
+                        :labels="datasets.map(dataset => {
+                            return dataset.label
+                        })"
+                        :datasets="pieDatasets"
+                        :plugins="[piePlugins]"
+                    />
+                </div>
+            </div>
+        </div>
+        <div v-else>
+            <BarChart
+                v-if="type.id === 'bar'"
+                :chartId="chartId"
+                :labels="labels"
+                :datasets="datasets"
+            />
+            <LineChart
+                v-if="type.id === 'line'"
+                :chartId="chartId"
+                :labels="labels"
+                :datasets="datasets"
+            />
+            <PieChart
+                v-if="type.id === 'pie'"
+                :chartId="chartId"
+                :labels="datasets.map(dataset => {
+                    return dataset.label
+                })"
+                :datasets="pieDatasets"
+                :plugins="[piePlugins]"
+            />
+        </div>
     </div>
 </template>
 <script>
@@ -75,6 +161,10 @@ export default {
         title: {
             type: String,
             default: '-'
+        },
+        defaultType: {
+            type: String,
+            default: 'bar'
         }
     },
     computed: {
@@ -111,6 +201,22 @@ export default {
                     id: 'pie',
                     name: 'Pie Chart'
                 },
+                {
+                    id: 'piebar',
+                    name: 'Pie + Bar'
+                },
+                {
+                    id: 'pieline',
+                    name: 'Pie + Line'
+                },
+                {
+                    id: 'barpie',
+                    name: 'Bar + Pie'
+                },
+                {
+                    id: 'linepie',
+                    name: 'Line + Pie'
+                },
             ],
             piePlugins: {
                 datalabels: {
@@ -127,6 +233,12 @@ export default {
                     color: '#000',
                 }
             }
+        }
+    },
+    mounted() {
+        const defaultType = this.lists.find(list => list.id == this.defaultType)
+        if (defaultType) {
+            this.type = {...defaultType}
         }
     }
 }
