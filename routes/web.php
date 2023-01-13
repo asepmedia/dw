@@ -148,6 +148,7 @@ Route::get('/sales', function() {
         $data = DB::table('fact_sales')
             ->select([
                 'dim_item.name as item',
+                DB::raw('CONCAT("invoice") as invoice'),
                 'dim_item_category.name as category',
                 'dim_item.color as background_color',
                 'dim_customer.name as customer',
@@ -195,6 +196,7 @@ Route::get('/sales', function() {
         $data = DB::table('fact_sales')
             ->select([
                 'dim_item.name as item',
+                DB::raw('CONCAT("invoice") as invoice'),
                 'dim_item_category.name as category',
                 'dim_item.color as background_color',
                 'dim_customer.name as customer',
@@ -246,6 +248,35 @@ Route::get('/sales', function() {
 
     switch(request()->type ?? 'sales') {
         case 'sales':
+            $labels = collect($data)
+                ->groupBy('date')
+                ->transform(function($row, $key) {
+                    return $key;
+                })
+                ->values();
+
+            $datasets = collect($data)
+                ->groupBy('invoice')
+                ->transform(function($row, $key) use ($labels) {
+                    $data = [];
+
+                    foreach($labels as $label) {
+                        $data[] = collect($row)
+                            ->where('date', $label)
+                            ->sum('total');
+                    }
+
+                    return [
+                        'label' => $key,
+                        'backgroundColor' => '#06b6d4',
+                        'borderColor' => '#06b6d4',
+                        'data' => $data
+                    ];
+                })
+                ->values()
+                ->toArray();
+            break;
+        case 'item':
             $labels = collect($data)
                 ->groupBy('date')
                 ->transform(function($row, $key) {

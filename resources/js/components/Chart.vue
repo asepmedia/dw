@@ -167,9 +167,9 @@
                         ref="chart-penjualan-barang"
                         title="Grafik Item"
                         chartId="chart-penjualan-barang"
-                        :loading="loading.salesQty"
-                        :labels="chartSalesQty.labels"
-                        :datasets="chartSalesQty.datasets"
+                        :loading="loading.salesItem"
+                        :labels="chartSalesItem.labels"
+                        :datasets="chartSalesItem.datasets"
                     />
                 </div>
                 <div class="my-1"></div>
@@ -401,6 +401,10 @@ export default {
                 salesCategory: {
                     labels: [],
                     datasets: []
+                },
+                salesItem: {
+                    labels: [],
+                    datasets: []
                 }
             },
             loading: {
@@ -408,6 +412,7 @@ export default {
                 salesQty: true,
                 salesCustomer: true,
                 salesCategory: true,
+                salesItem: true,
                 category: true,
                 item: true,
                 customer: true
@@ -431,6 +436,9 @@ export default {
         },
         chartSalesCategory() {
             return this.chart.salesCategory
+        },
+        chartSalesItem() {
+            return this.chart.salesItem
         },
         showAllPeriode() {
             const startYear = this.model.year.id
@@ -508,13 +516,23 @@ export default {
         },
         async fetchSalesChart() {
             this.loading.sales = true
-            const response = await axios.get(`/sales?${this.getParams()}`)
+            const response = await axios.get(`/sales?${this.getParams()}&type=sales`)
             const { data } = response
             const { labels, datasets } = data
 
             this.chart.sales.labels = labels
             this.chart.sales.datasets = datasets
             this.loading.sales = false
+        },
+        async fetchSalesItemChart() {
+            this.loading.salesItem = true
+            const response = await axios.get(`/sales?${this.getParams()}&type=item`)
+            const { data } = response
+            const { labels, datasets } = data
+
+            this.chart.salesItem.labels = labels
+            this.chart.salesItem.datasets = datasets
+            this.loading.salesItem = false
         },
         async fetchSalesQtyChart() {
             this.loading.salesQty = true
@@ -548,6 +566,7 @@ export default {
         },
         fetchChart() {
             this.fetchSalesChart()
+            this.fetchSalesItemChart()
             this.fetchSalesQtyChart()
             this.fetchSalesCustomerChart()
             this.fetchSalesCategoryChart()
